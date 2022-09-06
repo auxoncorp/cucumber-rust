@@ -14,7 +14,7 @@ pub fn make_app() -> CliOptions {
         .about("Run the tests, pet a dog!")
         .arg(
             Arg::with_name("filter")
-                .short("e")
+                .short('e')
                 .long("expression")
                 .value_name("regex")
                 .help("Regex to select scenarios from")

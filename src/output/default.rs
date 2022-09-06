@@ -39,7 +39,8 @@ impl Default for BasicOutput {
 fn wrap_with_comment(s: &str, c: &str, indent: &str) -> String {
     let tw = textwrap::termwidth();
     let w = tw - indent.chars().count();
-    let mut cs: Vec<String> = textwrap::wrap_iter(s, w)
+    let mut cs: Vec<String> = textwrap::wrap(s, w)
+        .into_iter()
         .map(|x| format!("{}{}", indent, &x.trim()))
         .collect();
     // Fit the comment onto the last line
