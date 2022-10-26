@@ -1,4 +1,4 @@
-use clap::{App, Arg};
+use clap::{Arg, ArgAction, Command};
 
 #[derive(Default)]
 pub struct CliOptions {
@@ -8,33 +8,34 @@ pub struct CliOptions {
 }
 
 pub fn make_app() -> CliOptions {
-    let matches = App::new("cucumber")
+    let matches = Command::new("cucumber")
         .version(env!("CARGO_PKG_VERSION"))
         .author("Brendan Molloy <brendan@bbqsrc.net>")
         .about("Run the tests, pet a dog!")
         .arg(
-            Arg::with_name("filter")
+            Arg::new("filter")
                 .short('e')
                 .long("expression")
                 .value_name("regex")
-                .help("Regex to select scenarios from")
-                .takes_value(true),
+                .help("Regex to select scenarios from"),
         )
         .arg(
-            Arg::with_name("nocapture")
+            Arg::new("nocapture")
                 .long("nocapture")
+                .action(ArgAction::SetTrue)
                 .help("Use this flag to disable suppression of output from tests"),
         )
         .arg(
-            Arg::with_name("debug")
+            Arg::new("debug")
                 .long("debug")
+                .action(ArgAction::SetTrue)
                 .help("Enable verbose test logging (debug mode)"),
         )
         .get_matches();
 
-    let nocapture = matches.is_present("nocapture");
-    let scenario_filter = matches.value_of("filter").map(|v| v.to_string());
-    let debug = matches.is_present("debug");
+    let nocapture = matches.contains_id("nocapture");
+    let scenario_filter = matches.get_one::<String>("filter").cloned();
+    let debug = matches.contains_id("debug");
 
     CliOptions {
         nocapture,
